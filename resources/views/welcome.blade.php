@@ -5,64 +5,9 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>Laravel</title>
+        <title>Laravel-Vue</title>
+        <link rel="stylesheet" href="{{mix('/css/app.css')}}">
 
-        <!-- Fonts -->
-        <link href="https://fonts.googleapis.com/css?family=Raleway:100,600" rel="stylesheet" type="text/css">
-
-        <!-- Styles -->
-        <style>
-            html, body {
-                background-color: #fff;
-                color: #636b6f;
-                font-family: 'Raleway', sans-serif;
-                font-weight: 100;
-                height: 100vh;
-                margin: 0;
-            }
-
-            .full-height {
-                height: 100vh;
-            }
-
-            .flex-center {
-                align-items: center;
-                display: flex;
-                justify-content: center;
-            }
-
-            .position-ref {
-                position: relative;
-            }
-
-            .top-right {
-                position: absolute;
-                right: 10px;
-                top: 18px;
-            }
-
-            .content {
-                text-align: center;
-            }
-
-            .title {
-                font-size: 84px;
-            }
-
-            .links > a {
-                color: #636b6f;
-                padding: 0 25px;
-                font-size: 12px;
-                font-weight: 600;
-                letter-spacing: .1rem;
-                text-decoration: none;
-                text-transform: uppercase;
-            }
-
-            .m-b-md {
-                margin-bottom: 30px;
-            }
-        </style>
     </head>
     <body>
         <div class="flex-center position-ref full-height">
@@ -78,18 +23,49 @@
             @endif
 
             <div class="content">
-                <div class="title m-b-md">
-                    Laravel
-                </div>
-
-                <div class="links">
-                    <a href="https://laravel.com/docs">Documentation</a>
-                    <a href="https://laracasts.com">Laracasts</a>
-                    <a href="https://laravel-news.com">News</a>
-                    <a href="https://forge.laravel.com">Forge</a>
-                    <a href="https://github.com/laravel/laravel">GitHub</a>
-                </div>
+                <tasks-app></tasks-app>
             </div>
         </div>
+        <template id="tasks-template">
+            <h1>my tasks</h1>
+            <ul class="list-group">
+                <li class="list-group-item" v-for="task in list">
+                    @{{task.body}} <strong @click="deleteTask(task)">X</strong>
+                </li>
+            </ul>
+        </template>
+
+        <script src="http://cdn.bootcss.com/vue/1.0.14/vue.js"></script>
+        <script src="http://cdn.bootcss.com/vue-resource/1.2.1/vue-resource.min.js"></script>
+
+        <script>
+            Vue.component('tasks-app',{
+                template:'#tasks-template',
+                data:function () {
+                    return {
+                        list:[]
+                    }
+                },
+                created:function () {
+                    var vm = this;
+//                    this.list = JSON.parse(this.list);
+                    this.$http.get('api/tasks').then(response => {
+//                        console.log(response.data);
+                        vm.list = response.data;
+                }, response => {
+
+                    });
+                },
+                methods:{
+                    deleteTask: function (task) {
+                        this.list.$remove(task);
+                    }
+                }
+
+            });
+            new Vue({
+                el:'.content'
+            })
+        </script>
     </body>
 </html>
