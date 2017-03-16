@@ -16,6 +16,4 @@ Route::get('/', function () {
 });
 
 
-Route::get('api/tasks',function (){
-    return \App\Task::latest()->get();
-});
+Route::resource('api/tasks','TaskController');
