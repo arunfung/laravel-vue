@@ -44,6 +44,7 @@
         <script>
 
             Vue.http.headers.common['X-CSRF-TOKEN'] = document.querySelector('#token').getAttribute('value');
+            var resource = Vue.resource('api/tasks/{id}');
             Vue.component('tasks-app',{
                 template:'#tasks-template',
                 data:function () {
@@ -64,6 +65,12 @@
                 },
                 methods:{
                     deleteTask: function (task) {
+                        resource.delete({id: task.id}).then(response => {
+                            console.log(response.data);
+                            // success callback
+                        }, response => {
+                            // error callback
+                        });
                         this.list.$remove(task);
                     },
                     createTask: function (){
@@ -71,7 +78,6 @@
                         Vue.http.post('api/tasks', {body:this.notes}).then(response => {
                             this.list.push(response.data.task);
                             this.notes = '';
-                            console.log(response.data);
                         }, response=>{
 
                         });
