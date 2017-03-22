@@ -16,3 +16,11 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::get('/todos', function () {
+//    return \App\Task::latest()->get();
+    return response()->json([
+        ['id'=>1,'title'=> 'jsksljdklsjdklasja', 'completed'=> false],
+        ['id'=>2,'title'=> 'jskscnmvnkljljfsjflsa', 'completed'=> false],
+    ]);
+})->middleware('cors:api');
