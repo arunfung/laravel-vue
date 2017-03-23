@@ -28,6 +28,7 @@ $factory->define(App\Task::class, function (Faker\Generator $faker) {
     static $password;
 
     return [
+        'title' => $faker->sentence,
         'body' => $faker->paragraph,
     ];
 });
